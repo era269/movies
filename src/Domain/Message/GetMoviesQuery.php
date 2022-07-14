@@ -6,18 +6,15 @@ namespace App\Domain\Message;
 
 use App\Domain\MessageInterface;
 use App\Domain\MovieOwnerId;
+use App\Domain\MovieOwnerIdAwareInterface;
+use App\Traits\MovieOwnerIdAwareTrait;
 
-final class GetMoviesQuery implements MessageInterface
+final class GetMoviesQuery implements MessageInterface, MovieOwnerIdAwareInterface
 {
-    private MovieOwnerId $id;
+    use MovieOwnerIdAwareTrait;
 
     public function __construct(MovieOwnerId $id)
     {
-        $this->id = $id;
-    }
-
-    public function getId(): MovieOwnerId
-    {
-        return $this->id;
+        $this->setMovieOwnerId($id);
     }
 }

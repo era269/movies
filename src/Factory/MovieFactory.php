@@ -59,13 +59,13 @@ final class MovieFactory implements MovieFactoryInterface
     private function getDirector(AddMovieCommand $command): Director
     {
         return $this->directorRepository->findOneByName($command->getDirector())
-            ?? (new Director())->setName($command->getDirector());
+            ?? new Director($command->getDirector());
     }
 
     private function getCast(string $cast): Actor
     {
         return $this->actorRepository->findOneByName($cast)
-            ?? (new Actor())->setName($cast);
+            ?? new Actor($cast);
     }
 
     private function getMovieRating(string $ratingType, float $ratingValue): MovieRating
@@ -73,7 +73,7 @@ final class MovieFactory implements MovieFactoryInterface
         return (new MovieRating())
             ->setType(
                 $this->ratingTypeRepository->findOneByName($ratingType)
-                ?? (new RatingType())->setName($ratingType)
+                ?? new RatingType($ratingType)
             )
             ->setValue($ratingValue);
     }

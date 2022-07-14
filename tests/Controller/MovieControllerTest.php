@@ -102,8 +102,9 @@ class MovieControllerTest extends WebTestCase
                 [
                     "name" => "1",
                     "casts" => [
-                        "1",
+                        "DiCaprio",
                         "2",
+                        "3",
                     ],
                     "release_date" => "18-01-1999",
                     "director" => "1",

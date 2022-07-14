@@ -18,8 +18,8 @@ final class MovieOwners
 
     public function __construct(
         MovieOwnerRepositoryInterface $ownerRepository,
-        EventDispatcherInterface $eventDispatcher,
-        MovieFactoryInterface $movieFactory
+        EventDispatcherInterface      $eventDispatcher,
+        MovieFactoryInterface         $movieFactory
     )
     {
         $this->ownerRepository = $ownerRepository;
@@ -29,31 +29,21 @@ final class MovieOwners
 
     public function addMovie(AddMovieCommand $command): MovieAddedEvent
     {
-        $this->ownerRepository->getMovieOwner(
-            $command->getMovieOwnerId()
-        )->addMovie(
-            $this->movieFactory->create($command)
-        );
+        $this->getMovieOwner($command)
+            ->addMovie(
+                $this->movieFactory->create($command)
+            );
         $event = $this->createEvent($command);
         $this->eventDispatcher->dispatch($event);
+
         return $event;
     }
 
-    public function getMovie(GetMovieByNameQuery $query): MovieInterface
+    private function getMovieOwner(MovieOwnerIdAwareInterface $message): MovieOwnerInterface
     {
-        return $this->ownerRepository
-            ->getMovieOwner($query->getId())
-            ->getMovieByName($query->getName());
-    }
-
-    /**
-     * @return MovieInterface[]
-     */
-    public function getMovies(GetMoviesQuery $query): iterable
-    {
-        return $this->ownerRepository
-            ->getMovieOwner($query->getId())
-            ->getMovies();
+        return $this->ownerRepository->getMovieOwner(
+            $message->getMovieOwnerId()
+        );
     }
 
     private function createEvent(AddMovieCommand $addUserMovieCommand): MovieAddedEvent
@@ -66,5 +56,20 @@ final class MovieOwners
             $addUserMovieCommand->getDirector(),
             $addUserMovieCommand->getRatings()
         );
+    }
+
+    public function getMovie(GetMovieByNameQuery $query): MovieInterface
+    {
+        return $this->getMovieOwner($query)
+            ->getMovieByName($query->getName());
+    }
+
+    /**
+     * @return MovieInterface[]
+     */
+    public function getMovies(GetMoviesQuery $query): iterable
+    {
+        return $this->getMovieOwner($query)
+            ->getMovies();
     }
 }

@@ -17,7 +17,7 @@ class MovieRating
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=RatingType::class, cascade={"persist"})
@@ -31,19 +31,15 @@ class MovieRating
     private $movie;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=false)
      */
-    private $value;
+    private float $value;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     *
-     * @return Collection<int, RatingType>
-     */
     public function getType(): RatingType
     {
         return $this->type;
@@ -55,19 +51,19 @@ class MovieRating
         return $this;
     }
 
-    public function getMovie(): ?Movie
+    public function getMovie(): Movie
     {
         return $this->movie;
     }
 
-    public function setMovie(?Movie $movie): self
+    public function setMovie(Movie $movie): self
     {
         $this->movie = $movie;
 
         return $this;
     }
 
-    public function getValue(): ?float
+    public function getValue(): float
     {
         return $this->value;
     }

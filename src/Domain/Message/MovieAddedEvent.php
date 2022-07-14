@@ -6,11 +6,15 @@ namespace App\Domain\Message;
 
 use App\Domain\MessageInterface;
 use App\Domain\MovieOwnerId;
+use App\Domain\MovieOwnerIdAwareInterface;
+use App\Traits\MovieOwnerIdAwareTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-final class MovieAddedEvent implements MessageInterface
+final class MovieAddedEvent implements MovieMessageInterface
 {
+    use MovieOwnerIdAwareTrait;
+
     private string $name;
     /**
      * @var string[]
@@ -24,20 +28,12 @@ final class MovieAddedEvent implements MessageInterface
     private array $ratings;
 
     private DateTimeInterface $occurredAt;
-
-    private MovieOwnerId $modelId;
-
     /**
      * @return DateTimeImmutable|DateTimeInterface
      */
     public function getOccurredAt()
     {
         return $this->occurredAt;
-    }
-
-    public function getModelId(): MovieOwnerId
-    {
-        return $this->modelId;
     }
 
     /**
@@ -59,7 +55,7 @@ final class MovieAddedEvent implements MessageInterface
         $this->director = $director;
         $this->ratings = $ratings;
         $this->occurredAt = new DateTimeImmutable();
-        $this->modelId = $modelId;
+        $this->setMovieOwnerId($modelId);
     }
 
     public function getName(): string
