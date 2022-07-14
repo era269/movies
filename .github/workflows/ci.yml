@@ -32,9 +32,9 @@ jobs:
             - name: Check HTTPS reachability
               run: curl -k https://localhost
             - name: create DB
-              run: docker exec movies_php_1 bin/console doctrine:database:create
+              run: docker exec movies_php_1 bin/console doctrine:database:create --env=test
             - name: run migrations
-              run: docker exec movies_php_1 bin/console doctrine:migrations:migrate
+              run: docker exec movies_php_1 bin/console doctrine:migrations:migrate --env=test
             - name: fill fixtures
               run: docker exec -it movies_php_1 bin/console doctrine:fixtures:load --env=test
             - name: phpUnit
