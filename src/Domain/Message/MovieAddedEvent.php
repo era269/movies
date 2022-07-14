@@ -11,7 +11,7 @@ use App\Traits\MovieOwnerIdAwareTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-final class MovieAddedEvent implements MessageInterface, MovieOwnerIdAwareInterface
+final class MovieAddedEvent implements MovieMessageInterface
 {
     use MovieOwnerIdAwareTrait;
 

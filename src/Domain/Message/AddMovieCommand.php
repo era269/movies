@@ -11,7 +11,7 @@ use App\Traits\MovieOwnerIdAwareTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-final class AddMovieCommand implements MessageInterface, MovieOwnerIdAwareInterface
+final class AddMovieCommand implements MovieMessageInterface
 {
     use MovieOwnerIdAwareTrait;
     private string $name;
