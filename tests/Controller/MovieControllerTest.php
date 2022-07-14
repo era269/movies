@@ -15,8 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MovieControllerTest extends WebTestCase
 {
-    const MOVIE = [
-        "name" => "The Titanic",
+    private const MOVIE_NAME = 'The Titanic';
+    private const MOVIE = [
+        "name" => self::MOVIE_NAME,
         "casts" => [
             "DiCaprio",
             "Kate Winslet",
@@ -51,6 +52,34 @@ class MovieControllerTest extends WebTestCase
             Response::HTTP_BAD_REQUEST,
             $this->client->getResponse()->getStatusCode()
         );
+    }
+
+    public function testNotFound()
+    {
+        $this->addMovie();
+
+        $this->client
+            ->request(Request::METHOD_GET, '/api/v1/movies/' . 'invalid-movie-name');
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testAccessToNotOwnMovie()
+    {
+        $this->addMovie();
+
+        $this->client->loginUser(
+            $this->getUser(AppFixtures::TEST_EMAIL_SECOND)
+        );
+        $this->client
+            ->request(Request::METHOD_GET, '/api/v1/movies/' . self::MOVIE_NAME);
+        self::assertEquals(
+            Response::HTTP_NOT_FOUND,
+            $this->client->getResponse()->getStatusCode()
+        );
+
     }
 
     private function addMovie(array $movie = self::MOVIE): void
@@ -147,9 +176,8 @@ class MovieControllerTest extends WebTestCase
     {
         $this->addMovie();
 
-        $id = 'The%20Titanic';
         $this->client
-            ->request(Request::METHOD_GET, '/api/v1/movies/' . $id);
+            ->request(Request::METHOD_GET, '/api/v1/movies/' . self::MOVIE_NAME);
         self::assertEquals(
             json_encode(self::MOVIE),
             $this->client->getResponse()->getContent()
@@ -172,16 +200,23 @@ class MovieControllerTest extends WebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
-        /** @var UserRepository $userRepository */
-        $userRepository = static::getContainer()->get(UserRepository::class);
         /** @var ObjectManager $dm */
         $dm = static::getContainer()->get(ObjectManager::class);
-        /** @var User $testUser */
-        $testUser = $userRepository->findOneByEmail(AppFixtures::TEST_EMAIL_COM);
+        /** @var UserRepository $userRepository */
+        $testUser = $this->getUser();
         foreach ($testUser->getMovieOwner()->getMovies() as $movie) {
             $dm->remove($movie);
         }
         $dm->flush();
         $this->client->loginUser($testUser);
+    }
+
+    private function getUser(string $email = AppFixtures::TEST_EMAIL): User
+    {
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        /** @var User $testUser */
+        $testUser = $userRepository->findOneByEmail($email);
+
+        return $testUser;
     }
 }

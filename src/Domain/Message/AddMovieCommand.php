@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Message;
 
+use App\Domain\MessageInterface;
 use App\Domain\MovieOwnerId;
 use App\Dto\MovieDto;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-final class AddUserMovieCommand implements \App\Domain\MessageInterface
+final class AddMovieCommand implements MessageInterface
 {
     private MovieOwnerId $movieOwnerId;
     private string $name;

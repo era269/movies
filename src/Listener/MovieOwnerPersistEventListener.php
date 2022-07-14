@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Listener;
 
-use App\Domain\Message\UserMovieAddedEvent;
+use App\Domain\Message\MovieAddedEvent;
 use Doctrine\Persistence\ObjectManager;
 
 final class MovieOwnerPersistEventListener
@@ -18,7 +18,7 @@ final class MovieOwnerPersistEventListener
         $this->om = $om;
     }
 
-    public function __invoke(UserMovieAddedEvent $event): void
+    public function __invoke(MovieAddedEvent $event): void
     {
         $this->om->flush();
     }

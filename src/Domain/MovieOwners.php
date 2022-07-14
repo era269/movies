@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain;
 
-use App\Domain\Message\AddUserMovieCommand;
+use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\GetMovieByNameQuery;
 use App\Domain\Message\GetMoviesQuery;
-use App\Domain\Message\UserMovieAddedEvent;
+use App\Domain\Message\MovieAddedEvent;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class MovieOwners
@@ -27,7 +27,7 @@ final class MovieOwners
         $this->movieFactory = $movieFactory;
     }
 
-    public function addMovie(AddUserMovieCommand $command): UserMovieAddedEvent
+    public function addMovie(AddMovieCommand $command): MovieAddedEvent
     {
         $this->ownerRepository->getMovieOwner(
             $command->getMovieOwnerId()
@@ -56,9 +56,9 @@ final class MovieOwners
             ->getMovies();
     }
 
-    private function createEvent(AddUserMovieCommand $addUserMovieCommand): UserMovieAddedEvent
+    private function createEvent(AddMovieCommand $addUserMovieCommand): MovieAddedEvent
     {
-        return new UserMovieAddedEvent(
+        return new MovieAddedEvent(
             $addUserMovieCommand->getMovieOwnerId(),
             $addUserMovieCommand->getName(),
             $addUserMovieCommand->getCasts(),

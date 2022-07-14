@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Domain\Message\AddUserMovieCommand;
+use App\Domain\Message\AddMovieCommand;
 use App\Domain\MovieFactoryInterface;
 use App\Entity\Actor;
 use App\Entity\Director;
@@ -32,7 +32,7 @@ final class MovieFactory implements MovieFactoryInterface
         $this->directorRepository = $directorRepository;
     }
 
-    public function create(AddUserMovieCommand $command): Movie
+    public function create(AddMovieCommand $command): Movie
     {
         $movie = new Movie();
         $movie
@@ -56,7 +56,7 @@ final class MovieFactory implements MovieFactoryInterface
         return $movie;
     }
 
-    private function getDirector(AddUserMovieCommand $command): Director
+    private function getDirector(AddMovieCommand $command): Director
     {
         return $this->directorRepository->findOneByName($command->getDirector())
             ?? (new Director())->setName($command->getDirector());

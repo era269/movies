@@ -9,7 +9,7 @@ use App\Domain\MovieOwnerId;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-final class UserMovieAddedEvent implements MessageInterface
+final class MovieAddedEvent implements MessageInterface
 {
     private string $name;
     /**

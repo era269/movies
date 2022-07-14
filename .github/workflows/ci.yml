@@ -1,8 +1,10 @@
 name: CI
 
 on:
-    push:
-    pull_request:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
     build:
@@ -29,3 +31,5 @@ jobs:
               run: curl http://localhost
             - name: Check HTTPS reachability
               run: curl -k https://localhost
+            - name: phpUnit
+              run: docker exec -it movies_php_1 phpunit --coverage-clover clover.xml --bootstrap="./tests/bootstrap.php" --whitelist src tests

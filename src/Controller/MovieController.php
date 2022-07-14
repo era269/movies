@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Domain\Message\AddUserMovieCommand;
+use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\GetMovieByNameQuery;
 use App\Domain\Message\GetMoviesQuery;
 use App\Domain\MovieOwnerId;
@@ -48,7 +48,7 @@ class MovieController extends AbstractController
 
         return $this->json(
             $this->movieOwners->addMovie(
-                AddUserMovieCommand::fromDto(
+                AddMovieCommand::fromDto(
                     $this->getMovieOwnerId(),
                     $addMovieDto,
                     $this->dateFormat
@@ -90,16 +90,12 @@ class MovieController extends AbstractController
      */
     public function all(): JsonResponse
     {
-        $query = new GetMoviesQuery(
-            $this->getMovieOwnerId()
+        return $this->json(
+            $this->movieOwners->getMovies(
+                new GetMoviesQuery(
+                    $this->getMovieOwnerId()
+                )
+            )
         );
-        try {
-            $movies = $this->movieOwners
-                ->getMovies($query);
-        } catch (OutOfBoundsException $exception) {
-            throw new NotFoundHttpException($exception->getMessage(), $exception);
-        }
-
-        return $this->json($movies);
     }
 }
