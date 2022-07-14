@@ -4,22 +4,21 @@
 git clone https://github.com/era269/movies.git
 cd movies
 docker-compose up
+```
+
+2. run tests
+```shell
+docker exec -it movies_php_1 bin/phpunit
+
+```
+3. servce cmmands
+```shell
 docker exec -it movies_php_1 doctrine:database:drop
 docker exec -it movies_php_1 doctrine:database:create
 docker exec -it movies_php_1 bin/console doctrine:migrations:migrate
 docker exec -it movies_php_1 bin/console doctrine:fixtures:load 
 ```
-
-2. run tests
-```shell
-docker exec -it movies_php_1 doctrine:database:drop --env=test
-docker exec -it movies_php_1 doctrine:database:create --env=test
-docker exec -it movies_php_1 bin/console doctrine:migrations:migrate --env=test
-docker exec -it movies_php_1 bin/console doctrine:fixtures:load --env=test 
-docker exec -it movies_php_1 bin/phpunit
-
-```
-3. add movie:
+4. add movie:
 ```shell
 curl -k --location --request POST 'https://localhost/api/v1/movies' \
 --header 'Authorization: Basic dGVzdEBlbWFpbC5jb206MQ==' \
