@@ -31,8 +31,6 @@ jobs:
               run: curl http://localhost
             - name: Check HTTPS reachability
               run: curl -k https://localhost
-            - name: drop DB
-              run: docker exec movies_php_1 bin/console doctrine:database:drop --env=test --force
             - name: create DB
               run: docker exec movies_php_1 bin/console doctrine:database:create --env=test --force
             - name: run migrations
