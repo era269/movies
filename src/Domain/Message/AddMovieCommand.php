@@ -5,13 +5,15 @@ namespace App\Domain\Message;
 
 use App\Domain\MessageInterface;
 use App\Domain\MovieOwnerId;
+use App\Domain\MovieOwnerIdAwareInterface;
 use App\Dto\MovieDto;
+use App\Traits\MovieOwnerIdAwareTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-final class AddMovieCommand implements MessageInterface
+final class AddMovieCommand implements MessageInterface, MovieOwnerIdAwareInterface
 {
-    private MovieOwnerId $movieOwnerId;
+    use MovieOwnerIdAwareTrait;
     private string $name;
     /**
      * @var string[]
@@ -37,7 +39,7 @@ final class AddMovieCommand implements MessageInterface
         array             $ratings
     )
     {
-        $this->movieOwnerId = $movieOwnerId;
+        $this->setMovieOwnerId($movieOwnerId);
         $this->name = $name;
         $this->casts = $casts;
         $this->releaseDate = $releaseDate;
@@ -86,10 +88,5 @@ final class AddMovieCommand implements MessageInterface
     public function getRatings(): array
     {
         return $this->ratings;
-    }
-
-    public function getMovieOwnerId(): MovieOwnerId
-    {
-        return $this->movieOwnerId;
     }
 }
