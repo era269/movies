@@ -31,5 +31,11 @@ jobs:
               run: curl http://localhost
             - name: Check HTTPS reachability
               run: curl -k https://localhost
+            - name: create DB
+              run: docker exec movies_php_1 bin/console doctrine:database:create
+            - name: run migrations
+              run: docker exec movies_php_1 bin/console doctrine:migrations:migrate
+            - name: fill fixtures
+              run: docker exec -it movies_php_1 bin/console doctrine:fixtures:load --env=test
             - name: phpUnit
               run: docker exec movies_php_1 bin/phpunit --coverage-clover clover.xml --bootstrap="./tests/bootstrap.php" --whitelist src tests

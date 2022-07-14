@@ -4,6 +4,7 @@
 git clone https://github.com/era269/movies.git
 cd movies
 docker-compose up
+docker exec -it movies_php_1 doctrine:database:create
 docker exec -it movies_php_1 bin/console doctrine:migrations:migrate
 docker exec -it movies_php_1 bin/console doctrine:fixtures:load 
 ```
