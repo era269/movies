@@ -34,8 +34,6 @@ jobs:
             - name: create DB
               run: docker exec movies_php_1 bin/console doctrine:database:create --env=test --if-not-exists
             - name: run migrations
-              run: docker exec movies_php_1 bin/console doctrine:migrations:migrate --env=test -n
-            - name: fill fixtures
-              run: docker exec movies_php_1 bin/console doctrine:fixtures:load --env=test -n
+              run: docker exec movies_php_1 bin/console doctrine:migrations:migrate --env=test -n --append
             - name: phpUnit
               run: docker exec movies_php_1 bin/phpunit --coverage-clover clover.xml --bootstrap="./tests/bootstrap.php" --whitelist src tests
