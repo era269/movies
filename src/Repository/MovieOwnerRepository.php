@@ -25,55 +25,13 @@ class MovieOwnerRepository extends ServiceEntityRepository implements MovieOwner
         parent::__construct($registry, MovieOwner::class);
     }
 
-    public function add(MovieOwner $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(MovieOwner $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-//    /**
-//     * @return MovieOwners[] Returns an array of MovieOwners objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?MovieOwners
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
     public function getMovieOwner(MovieOwnerId $id): MovieOwnerInterface
     {
         return $this->find($id->getValue())
-            ?? $this->throwOutOfBountsException();
+            ?? $this->throwOutOfBoundsException();
     }
 
-    private function throwOutOfBountsException(): MovieOwnerInterface
+    private function throwOutOfBoundsException(): MovieOwnerInterface
     {
         throw new OutOfBoundsException('Movie owner not found');
     }

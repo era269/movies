@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Domain\MovieInterface;
 use App\Repository\MovieRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,39 +19,41 @@ class Movie implements MovieInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true, nullable=false)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\ManyToMany(targetEntity=Actor::class, cascade={"persist"})
+     * @var Collection<int, Actor> $casts
      */
-    private $casts;
+    private Collection $casts;
 
     /**
      * @ORM\Column(type="date")
      */
-    private $releaseDate;
+    private DateTimeInterface $releaseDate;
 
     /**
      * @ORM\ManyToOne(targetEntity=Director::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $director;
+    private Director $director;
 
     /**
      * @ORM\OneToMany(mappedBy="movie", targetEntity=MovieRating::class, orphanRemoval=true, cascade={"persist"})
+     * @var Collection<int, MovieRating>
      */
-    private $ratings;
+    private Collection $ratings;
 
     /**
      * @ORM\ManyToOne(targetEntity=MovieOwner::class, inversedBy="movies")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $owner;
+    private MovieOwner $owner;
 
     public function __construct()
     {
@@ -58,12 +61,12 @@ class Movie implements MovieInterface
         $this->ratings = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -100,24 +103,24 @@ class Movie implements MovieInterface
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function getReleaseDate(): DateTimeInterface
     {
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(\DateTimeInterface $releaseDate): self
+    public function setReleaseDate(DateTimeInterface $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
 
         return $this;
     }
 
-    public function getDirector(): ?Director
+    public function getDirector(): Director
     {
         return $this->director;
     }
 
-    public function setDirector(?Director $director): self
+    public function setDirector(Director $director): self
     {
         $this->director = $director;
 
@@ -154,7 +157,7 @@ class Movie implements MovieInterface
         return $this;
     }
 
-    public function getOwner(): ?MovieOwner
+    public function getOwner(): MovieOwner
     {
         return $this->owner;
     }

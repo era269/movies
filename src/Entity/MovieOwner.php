@@ -25,16 +25,17 @@ class MovieOwner implements MovieOwnerInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="movieOwner")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $identity;
+    private User $identity;
     /**
      * @ORM\OneToMany(targetEntity=Movie::class, mappedBy="owner", orphanRemoval=true, cascade={"persist", "remove"})
+     * @var Collection<int, Movie>
      */
-    private $movies;
+    private Collection $movies;
 
     public function __construct()
     {
@@ -46,7 +47,7 @@ class MovieOwner implements MovieOwnerInterface
         return new MovieOwnerId($this->id);
     }
 
-    public function getIdentity(): ?User
+    public function getIdentity(): User
     {
         return $this->identity;
     }

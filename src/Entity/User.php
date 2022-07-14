@@ -18,11 +18,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=false)
      */
-    private $email;
+    private string $email;
     /**
      * @ORM\Column(type="json")
      */
@@ -30,14 +30,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToOne(targetEntity=MovieOwner::class, mappedBy="identity", cascade={"persist", "remove"})
      */
-    private $movieOwner;
+    private MovieOwner $movieOwner;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -95,7 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return '$argon2id$v=19$m=65536,t=4,p=1$gX5PUU5Zbee7AYV9Rpmkhg$mYgyPUq9jg2w4T3ACo9ufITG4fvlaElaGGEFatLtpXs';//1
     }
@@ -121,7 +121,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getMovieOwner(): ?MovieOwner
+    public function getMovieOwner(): MovieOwner
     {
         return $this->movieOwner;
     }
