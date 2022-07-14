@@ -5,22 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d752c1cd-82ac-4794-9606-17ea45eff596" name="Changes" comment="done">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/FUNDING.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/workflows/ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/ci.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/MovieController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MovieController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataFixtures/AppFixtures.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataFixtures/AppFixtures.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/Message/AddUserMovieCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Message/AddMovieCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/Message/UserMovieAddedEvent.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Message/MovieAddedEvent.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/MovieFactoryInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/MovieFactoryInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/MovieOwnerInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/MovieOwnerInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/MovieOwners.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/MovieOwners.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Factory/MovieFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Factory/MovieFactory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Listener/MovieOwnerPersistEventListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Listener/MovieOwnerPersistEventListener.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Listener/UserMovieNotificationEventListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Listener/UserMovieNotificationEventListener.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Controller/MovieControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Controller/MovieControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -259,7 +246,21 @@
       <option name="project" value="LOCAL" />
       <updated>1657796194795</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="done">
+      <created>1657810433643</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1657810433643</updated>
+    </task>
+    <task id="LOCAL-00003" summary="done">
+      <created>1657810467226</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1657810467226</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
