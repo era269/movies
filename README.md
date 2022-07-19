@@ -23,7 +23,6 @@ docker exec -it movies_php_1 bin/console doctrine:fixtures:load
 curl -k --location --request POST 'https://localhost/api/v1/movies' \
 --header 'Authorization: Basic dGVzdEBlbWFpbC5jb206MQ==' \
 --header 'Content-Type: application/json' \
---header 'Cookie: PHPSESSID=0cm6kpbemlqf3t1ukg26pp32l7' \
 --data-raw '{
     "name": "The Titanic",
     "casts":[
