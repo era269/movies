@@ -88,4 +88,16 @@ final class MovieAddedEvent implements MovieMessageInterface
     {
         return $this->ratings;
     }
+
+    public static function fromCommand(AddMovieCommand $command): self
+    {
+        return new self(
+            $command->getMovieOwnerId(),
+            $command->getName(),
+            $command->getCasts(),
+            $command->getReleaseDate(),
+            $command->getDirector(),
+            $command->getRatings()
+        );
+    }
 }

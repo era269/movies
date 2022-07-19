@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Domain;
 
 use App\Domain\Message\AddMovieCommand;
-use App\Domain\Message\Factory\MovieOwnerEventFactory;
+use App\Domain\Message\FailedToAddMovieEvent;
 use App\Domain\Message\GetMovieByNameQuery;
 use App\Domain\Message\GetMoviesQuery;
+use App\Domain\Message\MovieAddedEvent;
 use App\Domain\Message\MovieMessageInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -16,26 +17,23 @@ final class MovieOwners
     private MovieOwnerRepositoryInterface $ownerRepository;
     private EventDispatcherInterface $eventDispatcher;
     private MovieFactoryInterface $movieFactory;
-    private MovieOwnerEventFactory $eventFactory;
 
     public function __construct(
         MovieOwnerRepositoryInterface $ownerRepository,
         EventDispatcherInterface      $eventDispatcher,
-        MovieFactoryInterface         $movieFactory,
-        MovieOwnerEventFactory        $eventFactory
+        MovieFactoryInterface         $movieFactory
     )
     {
         $this->ownerRepository = $ownerRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->movieFactory = $movieFactory;
-        $this->eventFactory = $eventFactory;
     }
 
     public function addMovie(AddMovieCommand $command): MovieMessageInterface
     {
         if ($this->movieExists($command)) {
             return $this->dispatchAndReturn(
-                $this->eventFactory->createFailedToAddMovieEvent($command)
+                FailedToAddMovieEvent::fromCommand($command)
             );
         }
 
@@ -44,7 +42,7 @@ final class MovieOwners
         );
 
         return $this->dispatchAndReturn(
-            $this->eventFactory->createMovieAddedEvent($command)
+            MovieAddedEvent::fromCommand($command)
         );
     }
 
