@@ -32,3 +32,13 @@ services:
     App\Listener\UserMovieNotificationEventListener:
         tags:
             - { name: kernel.event_listener, event: App\Domain\Message\MovieAddedEvent, priority: -256}
+
+    App\Domain\MovieOwnersInterface: '@App\Domain\MovieOwners'
+
+    App\Domain\MovieOwnersDecorator\MovieOwnersEventDispatchDecorator:
+        decorates: App\Domain\MovieOwnersInterface
+        decoration_priority: -1
+
+    App\Domain\MovieOwnersDecorator\MovieOwnersAddExistingMovieDecorator:
+        decorates: App\Domain\MovieOwnersInterface
+        decoration_priority: 256

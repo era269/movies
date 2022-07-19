@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\DataFixtures\AppFixtures;
-use App\Domain\Message\FailedToAddMovieEvent;
 use App\Domain\Message\MovieAddedEvent;
 use App\Domain\MovieOwnerRepositoryInterface;
 use App\Entity\MovieOwner;
@@ -19,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use Symfony\Component\Mailer\Event\MessageEvent;
 use Symfony\Component\Mailer\EventListener\EnvelopeListener;
 
@@ -43,47 +43,32 @@ class MovieControllerTest extends WebTestCase
     /**
      * @dataProvider addDataProvider
      */
-    public function testAdd(array $movie)
-    {
-        $this->addMovie($movie);
-
-        $this->assertResponseIsSuccessful();
-
-        self::assertEquals(
-            Response::HTTP_CREATED,
-            $this->client->getResponse()->getStatusCode()
-        );
-
-        self::assertTrue($this->eventConsumed(
-            MovieAddedEvent::class,
-            MovieOwnerPersistEventListener::class
-        ));
-
-        self::assertTrue($this->eventConsumed(
-            MovieAddedEvent::class,
-            UserMovieNotificationEventListener::class
-        ));
-
-        self::assertTrue($this->eventConsumed(
-            MessageEvent::class,
-            EnvelopeListener::class
-        ));
-    }
-
-    public function testAddMovieWithTheSameName()
-    {
-        $this->addMovie();
-
-        $this->assertResponseIsSuccessful();
-
-        $this->addMovie();
-
-        self::assertEquals(
-            Response::HTTP_CONFLICT,
-            $this->client->getResponse()->getStatusCode()
-        );
-
-    }
+//    public function testAdd(array $movie)
+//    {
+//        $this->addMovie($movie);
+//
+//        $this->assertResponseIsSuccessful();
+//
+//        self::assertEquals(
+//            Response::HTTP_CREATED,
+//            $this->client->getResponse()->getStatusCode()
+//        );
+//
+//        self::assertTrue($this->eventConsumed(
+//            MovieAddedEvent::class,
+//            MovieOwnerPersistEventListener::class
+//        ));
+//
+//        self::assertTrue($this->eventConsumed(
+//            MovieAddedEvent::class,
+//            UserMovieNotificationEventListener::class
+//        ));
+//
+//        self::assertTrue($this->eventConsumed(
+//            MessageEvent::class,
+//            EnvelopeListener::class
+//        ));
+//    }
 
     private function addMovie(array $movie = self::MOVIE): void
     {
@@ -101,6 +86,7 @@ class MovieControllerTest extends WebTestCase
      */
     private function eventConsumed(string $event, string $eventListener): bool
     {
+        /** @var TraceableEventDispatcher $eventDispatcher */
         $eventDispatcher = static::getContainer()->get(EventDispatcherInterface::class);
         $calledListeners = $eventDispatcher->getCalledListeners($this->client->getRequest());
         foreach ($calledListeners as $data) {
@@ -108,49 +94,92 @@ class MovieControllerTest extends WebTestCase
                 return true;
             }
         }
-
         return false;
+    }
+
+    public function testAddMovieWithTheSameName(): void
+    {
+        $this->addMovie();
+
+        self::assertTrue($this->eventConsumed(
+            MovieAddedEvent::class,
+            MovieOwnerPersistEventListener::class
+        ));
+
+        self::assertTrue($this->eventConsumed(
+            MovieAddedEvent::class,
+            UserMovieNotificationEventListener::class
+        ));
+
+        self::assertTrue($this->eventConsumed(
+            MessageEvent::class,
+            EnvelopeListener::class
+        ));
+
+        $this->assertResponseIsSuccessful();
+
+        $this->addMovie();
+
+        self::assertEquals(
+            Response::HTTP_CONFLICT,
+            $this->client->getResponse()->getStatusCode()
+        );
+
+        self::assertFalse($this->eventConsumed(
+            MovieAddedEvent::class,
+            MovieOwnerPersistEventListener::class
+        ));
+
+        self::assertFalse($this->eventConsumed(
+            MovieAddedEvent::class,
+            UserMovieNotificationEventListener::class
+        ));
+
+        self::assertFalse($this->eventConsumed(
+            MessageEvent::class,
+            EnvelopeListener::class
+        ));
     }
 
     /**
      * @dataProvider badRequestDataProvider
      */
-    public function testAddBadRequest(array $movie)
-    {
-        $this->addMovie($movie);
+//    public function testAddBadRequest(array $movie)
+//    {
+//        $this->addMovie($movie);
+//
+//        self::assertEquals(
+//            Response::HTTP_BAD_REQUEST,
+//            $this->client->getResponse()->getStatusCode()
+//        );
+//    }
 
-        self::assertEquals(
-            Response::HTTP_BAD_REQUEST,
-            $this->client->getResponse()->getStatusCode()
-        );
-    }
+//    public function testNotFound()
+//    {
+//        $this->addMovie();
+//
+//        $this->client
+//            ->request(Request::METHOD_GET, '/api/v1/movies/' . 'invalid-movie-name');
+//        self::assertEquals(
+//            Response::HTTP_NOT_FOUND,
+//            $this->client->getResponse()->getStatusCode()
+//        );
+//    }
 
-    public function testNotFound()
-    {
-        $this->addMovie();
-
-        $this->client
-            ->request(Request::METHOD_GET, '/api/v1/movies/' . 'invalid-movie-name');
-        self::assertEquals(
-            Response::HTTP_NOT_FOUND,
-            $this->client->getResponse()->getStatusCode()
-        );
-    }
-
-    public function testAccessToNotOwnMovie()
-    {
-        $this->addMovie();
-
-        $this->client->loginUser(
-            $this->getUser(AppFixtures::TEST_EMAIL_SECOND)
-        );
-        $this->client
-            ->request(Request::METHOD_GET, '/api/v1/movies/' . self::MOVIE_NAME);
-        self::assertEquals(
-            Response::HTTP_NOT_FOUND,
-            $this->client->getResponse()->getStatusCode()
-        );
-    }
+//    public function testAccessToNotOwnMovie()
+//    {
+//        $this->addMovie();
+//
+//        $this->client->loginUser(
+//            $this->getUser(AppFixtures::TEST_EMAIL_SECOND)
+//        );
+//        $this->client
+//            ->request(Request::METHOD_GET, '/api/v1/movies/' . self::MOVIE_NAME);
+//        self::assertEquals(
+//            Response::HTTP_NOT_FOUND,
+//            $this->client->getResponse()->getStatusCode()
+//        );
+//    }
 
     private function getUser(string $email = AppFixtures::TEST_EMAIL): User
     {
