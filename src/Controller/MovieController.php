@@ -28,6 +28,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class MovieController extends AbstractController
 {
+    private const EVENT_HTTP_CODE_MAP = [
+        MovieAddedEvent::class => 201,
+        FailedToAddMovieEvent::class => 409,
+    ];
     private string $dateFormat;
     private MovieOwnersInterface $movieOwners;
 
@@ -56,21 +60,10 @@ class MovieController extends AbstractController
                 $this->dateFormat
             )
         );
-        switch ($movieMessage) {
-            case $movieMessage instanceof MovieAddedEvent:
-                $status = Response::HTTP_CREATED;
-                break;
-            case $movieMessage instanceof FailedToAddMovieEvent:
-                $status = Response::HTTP_CONFLICT;
-                break;
-            default:
-                $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-                break;
-        }
 
         return $this->json(
             $movieMessage,
-            $status
+            self::EVENT_HTTP_CODE_MAP[get_class($movieMessage)]
         );
     }
 
