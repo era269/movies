@@ -39,6 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )
     {
         $this->setMovieOwner( $movieOwner ?? new MovieOwner());
+        $this->email = $email;
     }
 
     public function getId(): int
