@@ -137,11 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private function setMovieOwner(MovieOwner $movieOwner): self
     {
-        // set the owning side of the relation if necessary
-        if ($movieOwner->getIdentity() !== $this) {
-            $movieOwner->setIdentity($this);
-        }
-
+        $movieOwner->setIdentity($this);
         $this->movieOwner = $movieOwner;
 
         return $this;
