@@ -8,7 +8,7 @@ use App\Domain\Message\GetMovieByNameQuery;
 use App\Domain\Message\GetMoviesQuery;
 use App\Domain\Message\MovieAddedEvent;
 use App\Domain\MovieOwnerId;
-use App\Domain\MovieOwners;
+use App\Domain\MovieOwnersInterface;
 use App\Dto\MovieDto;
 use App\Entity\User;
 use OutOfBoundsException;
@@ -28,10 +28,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class MovieController extends AbstractController
 {
+    private const EVENT_HTTP_CODE_MAP = [
+        MovieAddedEvent::class => 201,
+        FailedToAddMovieEvent::class => 409,
+    ];
     private string $dateFormat;
-    private MovieOwners $movieOwners;
+    private MovieOwnersInterface $movieOwners;
 
-    public function __construct(string $dateFormat, MovieOwners $movieOwners)
+    public function __construct(string $dateFormat, MovieOwnersInterface $movieOwners)
     {
         $this->dateFormat = $dateFormat;
         $this->movieOwners = $movieOwners;
@@ -56,14 +60,10 @@ class MovieController extends AbstractController
                 $this->dateFormat
             )
         );
-        switch ($movieMessage) {
-            case $movieMessage instanceof MovieAddedEvent: $status = Response::HTTP_CREATED; break;
-            case $movieMessage instanceof FailedToAddMovieEvent: $status = Response::HTTP_CONFLICT; break;
-            default: $status = Response::HTTP_UNPROCESSABLE_ENTITY; break;
-        }
+
         return $this->json(
             $movieMessage,
-            $status
+            self::EVENT_HTTP_CODE_MAP[get_class($movieMessage)]
         );
     }
 
