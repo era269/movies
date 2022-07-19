@@ -101,4 +101,11 @@ class MovieOwner implements MovieOwnerInterface
     {
         throw new OutOfBoundsException('Movie not found');
     }
+
+    public function hasMovie(string $movieName): bool
+    {
+        return $this->getMovies()->exists(
+            fn(int $k, Movie $m) => $m->getName() === $movieName
+        );
+    }
 }

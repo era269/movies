@@ -5,18 +5,27 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\DataFixtures\AppFixtures;
+use App\Domain\Message\FailedToAddMovieEvent;
+use App\Domain\Message\MovieAddedEvent;
+use App\Domain\MovieOwnerRepositoryInterface;
+use App\Entity\MovieOwner;
 use App\Entity\User;
+use App\Listener\MovieOwnerPersistEventListener;
+use App\Listener\UserMovieNotificationEventListener;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Event\MessageEvent;
+use Symfony\Component\Mailer\EventListener\EnvelopeListener;
 
 class MovieControllerTest extends WebTestCase
 {
     private const MOVIE_NAME = 'The Titanic';
-    private const MOVIE = [
+    private const MOVIE      = [
         "name" => self::MOVIE_NAME,
         "casts" => [
             "DiCaprio",
@@ -39,6 +48,68 @@ class MovieControllerTest extends WebTestCase
         $this->addMovie($movie);
 
         $this->assertResponseIsSuccessful();
+
+        self::assertEquals(
+            Response::HTTP_CREATED,
+            $this->client->getResponse()->getStatusCode()
+        );
+
+        self::assertTrue($this->eventConsumed(
+            MovieAddedEvent::class,
+            MovieOwnerPersistEventListener::class
+        ));
+
+        self::assertTrue($this->eventConsumed(
+            MovieAddedEvent::class,
+            UserMovieNotificationEventListener::class
+        ));
+
+        self::assertTrue($this->eventConsumed(
+            MessageEvent::class,
+            EnvelopeListener::class
+        ));
+    }
+
+    public function testAddMovieWithTheSameName()
+    {
+        $this->addMovie();
+
+        $this->assertResponseIsSuccessful();
+
+        $this->addMovie();
+
+        self::assertEquals(
+            Response::HTTP_CONFLICT,
+            $this->client->getResponse()->getStatusCode()
+        );
+
+    }
+
+    private function addMovie(array $movie = self::MOVIE): void
+    {
+        $this->client
+            ->request(
+                Request::METHOD_POST,
+                '/api/v1/movies', [], [], [],
+                json_encode($movie)
+            );
+    }
+
+    /**
+     * @param class-string $event
+     * @param class-string $eventListener
+     */
+    private function eventConsumed(string $event, string $eventListener): bool
+    {
+        $eventDispatcher = static::getContainer()->get(EventDispatcherInterface::class);
+        $calledListeners = $eventDispatcher->getCalledListeners($this->client->getRequest());
+        foreach ($calledListeners as $data) {
+            if ($data['event'] === $event && strpos($data['pretty'], $eventListener) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -79,17 +150,15 @@ class MovieControllerTest extends WebTestCase
             Response::HTTP_NOT_FOUND,
             $this->client->getResponse()->getStatusCode()
         );
-
     }
 
-    private function addMovie(array $movie = self::MOVIE): void
+    private function getUser(string $email = AppFixtures::TEST_EMAIL): User
     {
-        $this->client
-            ->request(
-                Request::METHOD_POST,
-                '/api/v1/movies', [], [], [],
-                json_encode($movie)
-            );
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        /** @var User $testUser */
+        $testUser = $userRepository->findOneByEmail($email);
+
+        return $testUser;
     }
 
     public function addDataProvider(): array
@@ -107,7 +176,7 @@ class MovieControllerTest extends WebTestCase
                         "3",
                     ],
                     "release_date" => "18-01-1999",
-                    "director" => "1",
+                    "director" => "James Cameron",
                     "ratings" => [
                         "imdb" => 1.1,
                         "rotten_tomatto" => 1.1,
@@ -201,23 +270,27 @@ class MovieControllerTest extends WebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
+        $this->client->loginUser($this->getUser());
+        $this->cleanMovies();
+    }
+
+    private function cleanMovies(): void
+    {
         /** @var ObjectManager $dm */
         $dm = static::getContainer()->get(ObjectManager::class);
-        /** @var UserRepository $userRepository */
-        $testUser = $this->getUser();
-        foreach ($testUser->getMovieOwner()->getMovies() as $movie) {
+        foreach ($this->getMovieOwner()->getMovies() as $movie) {
             $dm->remove($movie);
         }
         $dm->flush();
-        $this->client->loginUser($testUser);
     }
 
-    private function getUser(string $email = AppFixtures::TEST_EMAIL): User
+    private function getMovieOwner(string $email = AppFixtures::TEST_EMAIL): MovieOwner
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        /** @var User $testUser */
-        $testUser = $userRepository->findOneByEmail($email);
+        /** @var MovieOwnerRepositoryInterface $ownerRepository */
+        $ownerRepository = static::getContainer()->get(MovieOwnerRepositoryInterface::class);
 
-        return $testUser;
+        return $ownerRepository->getMovieOwner(
+            $this->getUser($email)->getMovieOwnerId()
+        );
     }
 }

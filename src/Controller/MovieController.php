@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Domain\Message\AddMovieCommand;
+use App\Domain\Message\FailedToAddMovieEvent;
 use App\Domain\Message\GetMovieByNameQuery;
 use App\Domain\Message\GetMoviesQuery;
+use App\Domain\Message\MovieAddedEvent;
 use App\Domain\MovieOwnerId;
 use App\Domain\MovieOwners;
 use App\Dto\MovieDto;
@@ -13,6 +15,7 @@ use OutOfBoundsException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,14 +49,21 @@ class MovieController extends AbstractController
             throw new BadRequestHttpException($violationList);
         }
 
-        return $this->json(
-            $this->movieOwners->addMovie(
-                AddMovieCommand::fromDto(
-                    $this->getMovieOwnerId(),
-                    $addMovieDto,
-                    $this->dateFormat
-                )
+        $movieMessage = $this->movieOwners->addMovie(
+            AddMovieCommand::fromDto(
+                $this->getMovieOwnerId(),
+                $addMovieDto,
+                $this->dateFormat
             )
+        );
+        switch ($movieMessage) {
+            case $movieMessage instanceof MovieAddedEvent: $status = Response::HTTP_CREATED; break;
+            case $movieMessage instanceof FailedToAddMovieEvent: $status = Response::HTTP_CONFLICT; break;
+            default: $status = Response::HTTP_UNPROCESSABLE_ENTITY; break;
+        }
+        return $this->json(
+            $movieMessage,
+            $status
         );
     }
 
@@ -62,7 +72,7 @@ class MovieController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        return $user->getMovieOwner()->getId();
+        return $user->getMovieOwnerId();
     }
 
     /**
