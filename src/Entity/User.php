@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Domain\MovieOwnerId;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -31,6 +32,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToOne(targetEntity=MovieOwner::class, mappedBy="identity", cascade={"persist", "remove"})
      */
     private MovieOwner $movieOwner;
+
+    public function __construct(
+        string $email,
+        ?MovieOwner $movieOwner = null
+    )
+    {
+        $this->setMovieOwner( $movieOwner ?? new MovieOwner());
+        $this->email = $email;
+    }
 
     public function getId(): int
     {
@@ -121,18 +131,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getMovieOwner(): MovieOwner
+    public function getMovieOwnerId(): MovieOwnerId
     {
-        return $this->movieOwner;
+        return $this->movieOwner->getId();
     }
 
-    public function setMovieOwner(MovieOwner $movieOwner): self
+    private function setMovieOwner(MovieOwner $movieOwner): self
     {
-        // set the owning side of the relation if necessary
-        if ($movieOwner->getIdentity() !== $this) {
-            $movieOwner->setIdentity($this);
-        }
-
+        $movieOwner->setIdentity($this);
         $this->movieOwner = $movieOwner;
 
         return $this;

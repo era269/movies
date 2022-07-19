@@ -7,6 +7,7 @@ namespace App\Domain;
 interface MovieOwnerInterface
 {
     public function addMovie(MovieInterface $movie): void;
+    public function hasMovie(string $movieName): bool;
 
     /**
      * @return MovieInterface[]
