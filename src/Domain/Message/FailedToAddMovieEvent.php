@@ -14,10 +14,28 @@ final class FailedToAddMovieEvent implements MovieMessageInterface
     private string $message;
     private string $movieName;
 
-    public function __construct(MovieOwnerId $movieOwnerId, string $movieName, string $message)
+    public function __construct(MovieOwnerId $movieOwnerId, string $movieName)
     {
-        $this->message = $message;
+        $this->message = 'Movie already exists';
         $this->movieName = $movieName;
         $this->setMovieOwnerId($movieOwnerId);
+    }
+
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    public function getMovieName(): string
+    {
+        return $this->movieName;
+    }
+
+    public static function fromCommand(AddMovieCommand $command): self
+    {
+        return new self(
+            $command->getMovieOwnerId(),
+            $command->getName()
+        );
     }
 }

@@ -32,19 +32,25 @@ final class MovieOwners
     public function addMovie(AddMovieCommand $command): MovieMessageInterface
     {
         if ($this->movieExists($command)) {
-            $event = $this->createFailedToAddMovieEvent($command);
-            $this->eventDispatcher->dispatch($event);
-
-            return $event;
-        }
-        $this->getMovieOwner($command)
-            ->addMovie(
-                $this->movieFactory->create($command)
+            return $this->dispatchAndReturn(
+                FailedToAddMovieEvent::fromCommand($command)
             );
-        $event = $this->createMovieAddedEvent($command);
-        $this->eventDispatcher->dispatch($event);
+        }
 
-        return $event;
+        $this->getMovieOwner($command)->addMovie(
+            $this->movieFactory->create($command)
+        );
+
+        return $this->dispatchAndReturn(
+            MovieAddedEvent::fromCommand($command)
+        );
+    }
+
+    private function movieExists(AddMovieCommand $command): bool
+    {
+        return $this->getMovieOwner($command)->hasMovie(
+            $command->getName()
+        );
     }
 
     private function getMovieOwner(MovieOwnerIdAwareInterface $message): MovieOwnerInterface
@@ -54,25 +60,11 @@ final class MovieOwners
         );
     }
 
-    private function createMovieAddedEvent(AddMovieCommand $addUserMovieCommand): MovieAddedEvent
+    private function dispatchAndReturn(MovieMessageInterface $message): MovieMessageInterface
     {
-        return new MovieAddedEvent(
-            $addUserMovieCommand->getMovieOwnerId(),
-            $addUserMovieCommand->getName(),
-            $addUserMovieCommand->getCasts(),
-            $addUserMovieCommand->getReleaseDate(),
-            $addUserMovieCommand->getDirector(),
-            $addUserMovieCommand->getRatings()
-        );
-    }
+        $this->eventDispatcher->dispatch($message);
 
-    private function createFailedToAddMovieEvent(AddMovieCommand $addUserMovieCommand): FailedToAddMovieEvent
-    {
-        return new FailedToAddMovieEvent(
-            $addUserMovieCommand->getMovieOwnerId(),
-            $addUserMovieCommand->getName(),
-            'Movie already exists'
-        );
+        return $message;
     }
 
     public function getMovie(GetMovieByNameQuery $query): MovieInterface
@@ -88,12 +80,5 @@ final class MovieOwners
     {
         return $this->getMovieOwner($query)
             ->getMovies();
-    }
-
-    private function movieExists(AddMovieCommand $command): bool
-    {
-        return $this->getMovieOwner($command)->hasMovie(
-            $command->getName()
-        );
     }
 }
