@@ -8,6 +8,7 @@ docker-compose up
 
 2. run tests
 ```shell
+docker exec -it movies_php_1 bin/console doctrine:fixtures:load --env=test
 docker exec -it movies_php_1 bin/phpunit
 
 ```
@@ -20,6 +21,7 @@ docker exec -it movies_php_1 bin/console doctrine:fixtures:load
 ```
 4. add movie:
 ```shell
+docker exec -it movies_php_1 bin/console doctrine:fixtures:load
 curl -k --location --request POST 'https://localhost/api/v1/movies' \
 --header 'Authorization: Basic dGVzdEBlbWFpbC5jb206MQ==' \
 --header 'Content-Type: application/json' \
