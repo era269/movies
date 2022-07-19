@@ -6,20 +6,19 @@ namespace App\Domain\MovieOwnersDecorator;
 
 use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\FailedToAddMovieEvent;
-use App\Domain\Message\GetMovieByNameQuery;
-use App\Domain\Message\GetMoviesQuery;
 use App\Domain\Message\MovieMessageInterface;
-use App\Domain\MovieInterface;
 use App\Domain\MovieOwnerRepositoryInterface;
 use App\Domain\MovieOwnersInterface;
+use App\Traits\MovieOwnersDecoratorTrait;
 
 final class MovieOwnersAddExistingMovieDecorator implements MovieOwnersInterface
 {
-    private MovieOwnersInterface $decorated;
+    use MovieOwnersDecoratorTrait;
+
     private MovieOwnerRepositoryInterface $repository;
 
     public function __construct(
-        MovieOwnersInterface $decorated,
+        MovieOwnersInterface          $decorated,
         MovieOwnerRepositoryInterface $repository
     )
     {
@@ -42,18 +41,5 @@ final class MovieOwnersAddExistingMovieDecorator implements MovieOwnersInterface
             )->hasMovie(
                 $command->getName()
             );
-    }
-
-    public function getMovie(GetMovieByNameQuery $query): MovieInterface
-    {
-        return $this->decorated->getMovie($query);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMovies(GetMoviesQuery $query): iterable
-    {
-        return $this->decorated->getMovies($query);
     }
 }
