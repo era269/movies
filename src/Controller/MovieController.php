@@ -8,7 +8,7 @@ use App\Domain\Message\GetMovieByNameQuery;
 use App\Domain\Message\GetMoviesQuery;
 use App\Domain\Message\MovieAddedEvent;
 use App\Domain\MovieOwnerId;
-use App\Domain\MovieOwnersInterface;
+use App\Domain\MovieLibraryInterface;
 use App\Dto\MovieDto;
 use App\Entity\User;
 use OutOfBoundsException;
@@ -33,9 +33,9 @@ class MovieController extends AbstractController
         FailedToAddMovieEvent::class => 409,
     ];
     private string $dateFormat;
-    private MovieOwnersInterface $movieOwners;
+    private MovieLibraryInterface $movieOwners;
 
-    public function __construct(string $dateFormat, MovieOwnersInterface $movieOwners)
+    public function __construct(string $dateFormat, MovieLibraryInterface $movieOwners)
     {
         $this->dateFormat = $dateFormat;
         $this->movieOwners = $movieOwners;

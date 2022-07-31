@@ -9,7 +9,7 @@ use App\Domain\Message\GetMovieByNameQuery;
 use App\Domain\Message\GetMoviesQuery;
 use App\Domain\Message\MovieMessageInterface;
 
-interface MovieOwnersInterface
+interface MovieLibraryInterface
 {
     public function addMovie(AddMovieCommand $command): MovieMessageInterface;
 

@@ -7,18 +7,18 @@ namespace App\Domain\MovieOwnersDecorator;
 use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\FailedToAddMovieEvent;
 use App\Domain\Message\MovieMessageInterface;
+use App\Domain\MovieLibraryInterface;
 use App\Domain\MovieOwnerRepositoryInterface;
-use App\Domain\MovieOwnersInterface;
 use App\Traits\MovieOwnersDecoratorTrait;
 
-final class MovieOwnersAddExistingMovieDecorator implements MovieOwnersInterface
+final class MovieOwnersAddExistingMovieDecorator implements MovieLibraryInterface
 {
     use MovieOwnersDecoratorTrait;
 
     private MovieOwnerRepositoryInterface $repository;
 
     public function __construct(
-        MovieOwnersInterface          $decorated,
+        MovieLibraryInterface         $decorated,
         MovieOwnerRepositoryInterface $repository
     )
     {

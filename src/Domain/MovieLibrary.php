@@ -10,7 +10,7 @@ use App\Domain\Message\GetMoviesQuery;
 use App\Domain\Message\MovieAddedEvent;
 use App\Domain\Message\MovieMessageInterface;
 
-final class MovieOwners implements MovieOwnersInterface
+final class MovieLibrary implements MovieLibraryInterface
 {
     private MovieOwnerRepositoryInterface $ownerRepository;
     private MovieFactoryInterface $movieFactory;
@@ -34,6 +34,13 @@ final class MovieOwners implements MovieOwnersInterface
         return MovieAddedEvent::fromCommand($command);
     }
 
+    private function getMovieOwner(MovieOwnerIdAwareInterface $message): MovieOwnerInterface
+    {
+        return $this->ownerRepository->getMovieOwner(
+            $message->getMovieOwnerId()
+        );
+    }
+
     public function getMovie(GetMovieByNameQuery $query): MovieInterface
     {
         return $this->getMovieOwner($query)
@@ -44,12 +51,5 @@ final class MovieOwners implements MovieOwnersInterface
     {
         return $this->getMovieOwner($query)
             ->getMovies();
-    }
-
-    private function getMovieOwner(MovieOwnerIdAwareInterface $message): MovieOwnerInterface
-    {
-        return $this->ownerRepository->getMovieOwner(
-            $message->getMovieOwnerId()
-        );
     }
 }

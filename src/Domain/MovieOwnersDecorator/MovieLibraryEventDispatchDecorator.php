@@ -6,18 +6,18 @@ namespace App\Domain\MovieOwnersDecorator;
 
 use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\MovieMessageInterface;
-use App\Domain\MovieOwnersInterface;
+use App\Domain\MovieLibraryInterface;
 use App\Traits\MovieOwnersDecoratorTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-final class MovieOwnersEventDispatchDecorator implements MovieOwnersInterface
+final class MovieLibraryEventDispatchDecorator implements MovieLibraryInterface
 {
     use MovieOwnersDecoratorTrait;
 
     private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
-        MovieOwnersInterface     $decorated,
+        MovieLibraryInterface    $decorated,
         EventDispatcherInterface $eventDispatcher
     )
     {
