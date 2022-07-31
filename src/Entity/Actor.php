@@ -17,14 +17,13 @@ class Actor
      */
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, unique=true, nullable=false)
-     */
-    private string $name;
-
-    public function __construct(string $name)
+    public function __construct(
+        /**
+         * @ORM\Column(type="string", length=255, unique=true, nullable=false)
+         */
+        private string $name
+    )
     {
-        $this->name = $name;
     }
 
     public function getId(): int

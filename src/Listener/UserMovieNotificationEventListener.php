@@ -13,19 +13,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final class UserMovieNotificationEventListener
 {
-    private MailerInterface $mailer;
-    private Security $security;
-    private SerializerInterface $serializer;
-
-    public function __construct(
-        MailerInterface $mailer,
-        Security        $security,
-        SerializerInterface $serializer
-    )
+    public function __construct(private readonly MailerInterface $mailer, private readonly Security        $security, private readonly SerializerInterface $serializer)
     {
-        $this->mailer = $mailer;
-        $this->security = $security;
-        $this->serializer = $serializer;
     }
 
     //ToDo: integrate with messenger to do asynchronously

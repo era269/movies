@@ -11,13 +11,10 @@ final class FailedToAddMovieEvent implements MovieMessageInterface
 {
     use MovieOwnerIdAwareTrait;
 
-    private string $message;
-    private string $movieName;
+    private string $message = 'Movie already exists';
 
-    public function __construct(MovieOwnerId $movieOwnerId, string $movieName)
+    public function __construct(MovieOwnerId $movieOwnerId, private readonly string $movieName)
     {
-        $this->message = 'Movie already exists';
-        $this->movieName = $movieName;
         $this->setMovieOwnerId($movieOwnerId);
     }
 

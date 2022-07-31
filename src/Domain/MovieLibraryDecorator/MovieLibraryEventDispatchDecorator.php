@@ -14,15 +14,12 @@ final class MovieLibraryEventDispatchDecorator implements MovieLibraryInterface
 {
     use MovieOwnersDecoratorTrait;
 
-    private EventDispatcherInterface $eventDispatcher;
-
     public function __construct(
         MovieLibraryInterface    $decorated,
-        EventDispatcherInterface $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher
     )
     {
         $this->decorated = $decorated;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function addMovie(AddMovieCommand $command): MovieMessageInterface

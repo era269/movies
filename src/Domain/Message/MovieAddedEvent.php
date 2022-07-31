@@ -15,23 +15,11 @@ final class MovieAddedEvent implements MovieMessageInterface
 {
     use MovieOwnerIdAwareTrait;
 
-    private string $name;
-    /**
-     * @var string[]
-     */
-    private array $casts;
-    private DateTimeInterface $releaseDate;
-    private string $director;
-    /**
-     * @var array<string, float>
-     */
-    private array $ratings;
-
-    private DateTimeInterface $occurredAt;
+    private readonly DateTimeInterface $occurredAt;
     /**
      * @return DateTimeImmutable|DateTimeInterface
      */
-    public function getOccurredAt()
+    public function getOccurredAt(): \DateTimeImmutable|\DateTimeInterface
     {
         return $this->occurredAt;
     }
@@ -42,18 +30,13 @@ final class MovieAddedEvent implements MovieMessageInterface
      */
     public function __construct(
         MovieOwnerId $modelId,
-        string   $name,
-        array    $casts,
-        DateTimeInterface $releaseDate,
-        string   $director,
-        array    $ratings
+        private readonly string   $name,
+        private readonly array    $casts,
+        private readonly DateTimeInterface $releaseDate,
+        private readonly string   $director,
+        private readonly array    $ratings
     )
     {
-        $this->name = $name;
-        $this->casts = $casts;
-        $this->releaseDate = $releaseDate;
-        $this->director = $director;
-        $this->ratings = $ratings;
         $this->occurredAt = new DateTimeImmutable();
         $this->setMovieOwnerId($modelId);
     }

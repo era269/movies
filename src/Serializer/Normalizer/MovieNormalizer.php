@@ -9,11 +9,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class MovieNormalizer implements NormalizerInterface, CacheableSupportsMethodInterface
 {
-    private string $dateFormat;
-
-    public function __construct(string $dateFormat)
+    public function __construct(private readonly string $dateFormat)
     {
-        $this->dateFormat = $dateFormat;
     }
 
     /**

@@ -11,11 +11,8 @@ final class GetMovieByNameQuery implements MovieMessageInterface
 {
     use MovieOwnerIdAwareTrait;
 
-    private string $name;
-
-    public function __construct(MovieOwnerId $id, string $name)
+    public function __construct(MovieOwnerId $id, private readonly string $name)
     {
-        $this->name = $name;
         $this->setMovieOwnerId($id);
     }
 

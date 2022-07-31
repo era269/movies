@@ -15,15 +15,12 @@ final class MovieLibraryAddExistingMovieDecorator implements MovieLibraryInterfa
 {
     use MovieOwnersDecoratorTrait;
 
-    private MovieOwnerRepositoryInterface $repository;
-
     public function __construct(
         MovieLibraryInterface         $decorated,
-        MovieOwnerRepositoryInterface $repository
+        private readonly MovieOwnerRepositoryInterface $repository
     )
     {
         $this->decorated = $decorated;
-        $this->repository = $repository;
     }
 
     public function addMovie(AddMovieCommand $command): MovieMessageInterface

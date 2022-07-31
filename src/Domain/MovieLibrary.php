@@ -12,16 +12,8 @@ use App\Domain\Message\MovieMessageInterface;
 
 final class MovieLibrary implements MovieLibraryInterface
 {
-    private MovieOwnerRepositoryInterface $ownerRepository;
-    private MovieFactoryInterface $movieFactory;
-
-    public function __construct(
-        MovieOwnerRepositoryInterface $ownerRepository,
-        MovieFactoryInterface         $movieFactory
-    )
+    public function __construct(private readonly MovieOwnerRepositoryInterface $ownerRepository, private readonly MovieFactoryInterface         $movieFactory)
     {
-        $this->ownerRepository = $ownerRepository;
-        $this->movieFactory = $movieFactory;
     }
 
     public function addMovie(AddMovieCommand $command): MovieMessageInterface

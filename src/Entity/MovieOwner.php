@@ -86,7 +86,7 @@ class MovieOwner implements MovieOwnerInterface
                 fn (Movie $m) => $m->getName() === $name
             )
             ->first()
-            ?: $this->throwMovieNotFound();
+            ?: throw new OutOfBoundsException('Movie not found');
     }
 
     /**
@@ -95,11 +95,6 @@ class MovieOwner implements MovieOwnerInterface
     public function getMovies(): Collection
     {
         return $this->movies;
-    }
-
-    private function throwMovieNotFound(): Movie
-    {
-        throw new OutOfBoundsException('Movie not found');
     }
 
     public function hasMovie(string $movieName): bool

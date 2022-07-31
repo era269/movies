@@ -34,8 +34,9 @@ services:
 
     App\Domain\MovieLibraryDecorator\MovieLibraryEventDispatchDecorator:
         decorates: App\Domain\MovieLibraryInterface
-        decoration_priority: -1
 
     App\Domain\MovieLibraryDecorator\MovieLibraryAddExistingMovieDecorator:
         decorates: App\Domain\MovieLibraryInterface
-        decoration_priority: 256
+    
+    App\EventDispatcher\MovieLibraryPersistenceEventDispatcherDecorator:
+        decorates: Psr\EventDispatcher\EventDispatcherInterface
