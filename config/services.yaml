@@ -32,10 +32,10 @@ services:
 
     App\Domain\MovieLibraryInterface: '@App\Domain\MovieLibrary'
 
-    App\Domain\MovieOwnersDecorator\MovieLibraryEventDispatchDecorator:
-        decorates: App\Domain\MovieOwnersInterface
+    App\Domain\MovieLibraryDecorator\MovieLibraryEventDispatchDecorator:
+        decorates: App\Domain\MovieLibraryInterface
         decoration_priority: -1
 
-    App\Domain\MovieOwnersDecorator\MovieOwnersAddExistingMovieDecorator:
-        decorates: App\Domain\MovieOwnersInterface
+    App\Domain\MovieLibraryDecorator\MovieLibraryAddExistingMovieDecorator:
+        decorates: App\Domain\MovieLibraryInterface
         decoration_priority: 256

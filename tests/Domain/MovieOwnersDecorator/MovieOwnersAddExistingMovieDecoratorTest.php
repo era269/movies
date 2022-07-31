@@ -11,7 +11,7 @@ use App\Domain\MovieLibraryInterface;
 use App\Domain\MovieOwnerId;
 use App\Domain\MovieOwnerInterface;
 use App\Domain\MovieOwnerRepositoryInterface;
-use App\Domain\MovieOwnersDecorator\MovieOwnersAddExistingMovieDecorator;
+use App\Domain\MovieLibraryDecorator\MovieLibraryAddExistingMovieDecorator;
 use DateTime;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -75,7 +75,7 @@ class MovieOwnersAddExistingMovieDecoratorTest extends TestCase
         $repository
             ->method('getMovieOwner')
             ->willReturn($this->movieOwner);
-        $this->decorator = new MovieOwnersAddExistingMovieDecorator(
+        $this->decorator = new MovieLibraryAddExistingMovieDecorator(
             $decorated,
             $repository
         );

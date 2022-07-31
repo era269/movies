@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\MovieOwnersDecorator;
+namespace App\Domain\MovieLibraryDecorator;
 
 use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\FailedToAddMovieEvent;
@@ -11,7 +11,7 @@ use App\Domain\MovieLibraryInterface;
 use App\Domain\MovieOwnerRepositoryInterface;
 use App\Traits\MovieOwnersDecoratorTrait;
 
-final class MovieOwnersAddExistingMovieDecorator implements MovieLibraryInterface
+final class MovieLibraryAddExistingMovieDecorator implements MovieLibraryInterface
 {
     use MovieOwnersDecoratorTrait;
 

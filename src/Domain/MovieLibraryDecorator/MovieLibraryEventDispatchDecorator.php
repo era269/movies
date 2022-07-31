@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\MovieOwnersDecorator;
+namespace App\Domain\MovieLibraryDecorator;
 
 use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\MovieMessageInterface;
