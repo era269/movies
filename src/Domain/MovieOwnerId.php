@@ -6,11 +6,8 @@ namespace App\Domain;
 
 final class MovieOwnerId
 {
-    private int $value;
-
-    public function __construct(int $value)
+    public function __construct(private readonly int $value)
     {
-        $this->value = $value;
     }
 
     public function getValue(): int

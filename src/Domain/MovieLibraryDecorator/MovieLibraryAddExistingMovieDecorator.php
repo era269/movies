@@ -2,28 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\MovieOwnersDecorator;
+namespace App\Domain\MovieLibraryDecorator;
 
 use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\FailedToAddMovieEvent;
 use App\Domain\Message\MovieMessageInterface;
+use App\Domain\MovieLibraryInterface;
 use App\Domain\MovieOwnerRepositoryInterface;
-use App\Domain\MovieOwnersInterface;
 use App\Traits\MovieOwnersDecoratorTrait;
 
-final class MovieOwnersAddExistingMovieDecorator implements MovieOwnersInterface
+final class MovieLibraryAddExistingMovieDecorator implements MovieLibraryInterface
 {
     use MovieOwnersDecoratorTrait;
 
-    private MovieOwnerRepositoryInterface $repository;
-
     public function __construct(
-        MovieOwnersInterface          $decorated,
-        MovieOwnerRepositoryInterface $repository
+        MovieLibraryInterface         $decorated,
+        private readonly MovieOwnerRepositoryInterface $repository
     )
     {
         $this->decorated = $decorated;
-        $this->repository = $repository;
     }
 
     public function addMovie(AddMovieCommand $command): MovieMessageInterface

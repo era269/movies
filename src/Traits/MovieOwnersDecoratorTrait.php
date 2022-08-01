@@ -9,11 +9,11 @@ use App\Domain\Message\GetMovieByNameQuery;
 use App\Domain\Message\GetMoviesQuery;
 use App\Domain\Message\MovieMessageInterface;
 use App\Domain\MovieInterface;
-use App\Domain\MovieOwnersInterface;
+use App\Domain\MovieLibraryInterface;
 
 trait MovieOwnersDecoratorTrait
 {
-    private MovieOwnersInterface $decorated;
+    private MovieLibraryInterface $decorated;
 
     public function addMovie(AddMovieCommand $command): MovieMessageInterface
     {

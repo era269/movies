@@ -14,17 +14,6 @@ use DateTimeInterface;
 final class AddMovieCommand implements MovieMessageInterface
 {
     use MovieOwnerIdAwareTrait;
-    private string $name;
-    /**
-     * @var string[]
-     */
-    private array $casts;
-    private DateTimeInterface $releaseDate;
-    private string $director;
-    /**
-     * @var array<string, float>
-     */
-    private array $ratings;
 
     /**
      * @param string[] $casts
@@ -32,19 +21,14 @@ final class AddMovieCommand implements MovieMessageInterface
      */
     public function __construct(
         MovieOwnerId      $movieOwnerId,
-        string            $name,
-        array             $casts,
-        DateTimeInterface $releaseDate,
-        string            $director,
-        array             $ratings
+        private readonly string            $name,
+        private readonly array             $casts,
+        private readonly DateTimeInterface $releaseDate,
+        private readonly string            $director,
+        private readonly array             $ratings
     )
     {
         $this->setMovieOwnerId($movieOwnerId);
-        $this->name = $name;
-        $this->casts = $casts;
-        $this->releaseDate = $releaseDate;
-        $this->director = $director;
-        $this->ratings = $ratings;
     }
 
     public static function fromDto(MovieOwnerId $movieOwnerId, MovieDto $dto, string $dateFormat = DateTimeInterface::RFC3339): self

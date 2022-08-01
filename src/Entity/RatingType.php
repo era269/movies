@@ -17,14 +17,13 @@ class RatingType
      */
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false, unique=true)
-     */
-    private string $name;
-
-    public function __construct(string $name)
+    public function __construct(
+        /**
+         * @ORM\Column(type="string", length=255, nullable=false, unique=true)
+         */
+        private string $name
+    )
     {
-        $this->name = $name;
     }
 
     public function getId(): int

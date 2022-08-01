@@ -9,7 +9,6 @@ use App\Domain\Message\MovieAddedEvent;
 use App\Domain\MovieOwnerRepositoryInterface;
 use App\Entity\MovieOwner;
 use App\Entity\User;
-use App\Listener\MovieOwnerPersistEventListener;
 use App\Listener\UserMovieNotificationEventListener;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -56,11 +55,6 @@ class MovieControllerTest extends WebTestCase
 
         self::assertTrue($this->eventConsumed(
             MovieAddedEvent::class,
-            MovieOwnerPersistEventListener::class
-        ));
-
-        self::assertTrue($this->eventConsumed(
-            MovieAddedEvent::class,
             UserMovieNotificationEventListener::class
         ));
 
@@ -103,11 +97,6 @@ class MovieControllerTest extends WebTestCase
 
         self::assertTrue($this->eventConsumed(
             MovieAddedEvent::class,
-            MovieOwnerPersistEventListener::class
-        ));
-
-        self::assertTrue($this->eventConsumed(
-            MovieAddedEvent::class,
             UserMovieNotificationEventListener::class
         ));
 
@@ -124,11 +113,6 @@ class MovieControllerTest extends WebTestCase
             Response::HTTP_CONFLICT,
             $this->client->getResponse()->getStatusCode()
         );
-
-        self::assertFalse($this->eventConsumed(
-            MovieAddedEvent::class,
-            MovieOwnerPersistEventListener::class
-        ));
 
         self::assertFalse($this->eventConsumed(
             MovieAddedEvent::class,

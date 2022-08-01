@@ -31,7 +31,7 @@ class MovieOwnerRepository extends ServiceEntityRepository implements MovieOwner
             ?? $this->throwOutOfBoundsException();
     }
 
-    private function throwOutOfBoundsException(): MovieOwnerInterface
+    private function throwOutOfBoundsException(): never
     {
         throw new OutOfBoundsException('Movie owner not found');
     }

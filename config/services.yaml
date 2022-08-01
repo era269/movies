@@ -26,19 +26,17 @@ services:
 
     Doctrine\Persistence\ObjectManager: "@doctrine.orm.default_entity_manager"
 
-    App\Listener\MovieOwnerPersistEventListener:
-        tags:
-            - { name: kernel.event_listener, event: App\Domain\Message\MovieAddedEvent, priority: 256}
     App\Listener\UserMovieNotificationEventListener:
         tags:
             - { name: kernel.event_listener, event: App\Domain\Message\MovieAddedEvent, priority: -256}
 
-    App\Domain\MovieOwnersInterface: '@App\Domain\MovieOwners'
+    App\Domain\MovieLibraryInterface: '@App\Domain\MovieLibrary'
 
-    App\Domain\MovieOwnersDecorator\MovieOwnersEventDispatchDecorator:
-        decorates: App\Domain\MovieOwnersInterface
-        decoration_priority: -1
+    App\Domain\MovieLibraryDecorator\MovieLibraryEventDispatchDecorator:
+        decorates: App\Domain\MovieLibraryInterface
 
-    App\Domain\MovieOwnersDecorator\MovieOwnersAddExistingMovieDecorator:
-        decorates: App\Domain\MovieOwnersInterface
-        decoration_priority: 256
+    App\Domain\MovieLibraryDecorator\MovieLibraryAddExistingMovieDecorator:
+        decorates: App\Domain\MovieLibraryInterface
+    
+    App\EventDispatcher\MovieLibraryPersistenceEventDispatcherDecorator:
+        decorates: Psr\EventDispatcher\EventDispatcherInterface

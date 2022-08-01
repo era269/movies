@@ -8,8 +8,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    const TEST_EMAIL        = 'test@email.com';
-    const TEST_EMAIL_SECOND = 'test-second@email.com';
+    final const TEST_EMAIL        = 'test@email.com';
+    final const TEST_EMAIL_SECOND = 'test-second@email.com';
 
     public function load(ObjectManager $manager): void
     {

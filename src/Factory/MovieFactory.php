@@ -17,19 +17,8 @@ use App\Repository\RatingTypeRepository;
 
 final class MovieFactory implements MovieFactoryInterface
 {
-    private ActorRepository $actorRepository;
-    private RatingTypeRepository $ratingTypeRepository;
-    private DirectorRepository $directorRepository;
-
-    public function __construct(
-        ActorRepository      $actorRepository,
-        RatingTypeRepository $ratingTypeRepository,
-        DirectorRepository   $directorRepository
-    )
+    public function __construct(private readonly ActorRepository      $actorRepository, private readonly RatingTypeRepository $ratingTypeRepository, private readonly DirectorRepository   $directorRepository)
     {
-        $this->actorRepository = $actorRepository;
-        $this->ratingTypeRepository = $ratingTypeRepository;
-        $this->directorRepository = $directorRepository;
     }
 
     public function create(AddMovieCommand $command): Movie

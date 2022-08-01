@@ -7,11 +7,11 @@ namespace App\Tests\Domain\MovieOwnersDecorator;
 use App\Domain\Message\AddMovieCommand;
 use App\Domain\Message\FailedToAddMovieEvent;
 use App\Domain\Message\MovieAddedEvent;
+use App\Domain\MovieLibraryInterface;
 use App\Domain\MovieOwnerId;
 use App\Domain\MovieOwnerInterface;
 use App\Domain\MovieOwnerRepositoryInterface;
-use App\Domain\MovieOwnersDecorator\MovieOwnersAddExistingMovieDecorator;
-use App\Domain\MovieOwnersInterface;
+use App\Domain\MovieLibraryDecorator\MovieLibraryAddExistingMovieDecorator;
 use DateTime;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +22,6 @@ class MovieOwnersAddExistingMovieDecoratorTest extends TestCase
      * @var MovieOwnerInterface|MockObject
      */
     private MovieOwnerInterface $movieOwner;
-    private MovieOwnersAddExistingMovieDecorator $decorator;
     private AddMovieCommand $command;
 
     /**
@@ -62,8 +61,8 @@ class MovieOwnersAddExistingMovieDecoratorTest extends TestCase
             []
         );
 
-        /** @var MovieOwnersInterface&MockObject $decorated */
-        $decorated = self::createMock(MovieOwnersInterface::class);
+        /** @var MovieLibraryInterface&MockObject $decorated */
+        $decorated = self::createMock(MovieLibraryInterface::class);
         $decorated
             ->method('addMovie')
             ->willReturn(
@@ -76,7 +75,7 @@ class MovieOwnersAddExistingMovieDecoratorTest extends TestCase
         $repository
             ->method('getMovieOwner')
             ->willReturn($this->movieOwner);
-        $this->decorator = new MovieOwnersAddExistingMovieDecorator(
+        $this->decorator = new MovieLibraryAddExistingMovieDecorator(
             $decorated,
             $repository
         );

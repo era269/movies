@@ -21,25 +21,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private int $id;
     /**
-     * @ORM\Column(type="string", length=180, unique=true, nullable=false)
-     */
-    private string $email;
-    /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
     /**
      * @ORM\OneToOne(targetEntity=MovieOwner::class, mappedBy="identity", cascade={"persist", "remove"})
      */
     private MovieOwner $movieOwner;
 
     public function __construct(
-        string $email,
+        /**
+         * @ORM\Column(type="string", length=180, unique=true, nullable=false)
+         */
+        private string $email,
         ?MovieOwner $movieOwner = null
     )
     {
         $this->setMovieOwner( $movieOwner ?? new MovieOwner());
-        $this->email = $email;
     }
 
     public function getId(): int
@@ -67,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
